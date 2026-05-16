@@ -117,15 +117,13 @@ const Hero = () => {
               <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-brand opacity-50" />
               
               <div className="relative w-full h-full overflow-hidden bg-slate-950">
-                <img 
-                  src="/profile2.png" 
-                  alt="Mukul Ranjan" 
+                <img
+                  src={`${import.meta.env.BASE_URL}profile2.png`}
+                  alt="Mukul Ranjan"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover grayscale brightness-110 hover:grayscale-0 transition-all duration-700 hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800";
-                  }}
                 />
+
                 
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-black/80 backdrop-blur-md p-4 border border-white/10">

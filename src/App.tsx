@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <div className="relative selection:bg-brand/30 selection:text-white overflow-x-hidden">
-      <div className="fixed top-0 left-0 bg-red-500 text-white z-[999] p-2 text-xs">RENDER_CHECK_01</div>
+      
       {/* Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[2px] bg-brand z-[100] origin-left"
