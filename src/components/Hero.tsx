@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { ChevronDown, Github, Linkedin, Download } from "lucide-react";
+import { ChevronDown, Github, Linkedin, Download, ExternalLink } from "lucide-react";
 
 // resume - interactive link configuration
 const RESUME_URL = "https://mukulranjan3990.github.io/mukul-ranjan-resume/";
@@ -96,12 +96,12 @@ const Hero = () => {
             >
               <a 
                 href="#projects" 
-                className="w-full sm:w-auto px-8 py-4 bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-brand transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-brand transition-all flex items-center justify-center gap-2 group"
               >
                 Project Archive
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </a>
-
-
+              
               {/* resume - interactive primary button */}
               <a 
                 href={RESUME_URL}
@@ -133,13 +133,12 @@ const Hero = () => {
               <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-brand opacity-50" />
               
               <div className="relative w-full h-full overflow-hidden bg-slate-950">
-                <img
+                 <img
                   src={`${import.meta.env.BASE_URL}profile2.png`}
                   alt="Mukul Ranjan"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover grayscale brightness-110 hover:grayscale-0 transition-all duration-700 hover:scale-105"
                 />
-
                 
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-black/80 backdrop-blur-md p-4 border border-white/10">
@@ -157,9 +156,7 @@ const Hero = () => {
         </div>
       </div>
 
-
-
-       {/* resume - interactive floating badge */}
+      {/* resume - interactive floating badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
