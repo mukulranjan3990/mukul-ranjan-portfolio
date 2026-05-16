@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ChevronDown, Github, Linkedin, Download } from "lucide-react";
 
+// resume - interactive link configuration
+const RESUME_URL = "https://mukulranjan3990.github.io/mukul-ranjan-resume/";
+
 const titles = [
   "DevOps Engineer",
   "Cloud Architecture Learner",
@@ -97,6 +100,19 @@ const Hero = () => {
               >
                 Project Archive
               </a>
+
+
+              {/* resume - interactive primary button */}
+              <a 
+                href={RESUME_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-8 py-4 bg-brand text-black text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2 ring-1 ring-white/10"
+              >
+                View Resume
+                <ExternalLink size={14} strokeWidth={3} />
+              </a>
+
               <a 
                 href="#contact" 
                 className="w-full sm:w-auto px-8 py-4 border border-slate-800 text-white text-xs font-black uppercase tracking-widest hover:bg-slate-900 transition-all flex items-center justify-center gap-2"
@@ -140,6 +156,38 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+
+
+       {/* resume - interactive floating badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 2, duration: 0.5 }}
+        className="fixed left-6 bottom-10 z-[60] hidden lg:block"
+      >
+        <a 
+          href={RESUME_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-slate-950 border border-slate-800 p-2 pr-6 hover:border-brand transition-all group"
+        >
+          <div className="w-10 h-10 bg-brand/10 flex items-center justify-center text-brand">
+            <Download size={18} />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[10px] font-black uppercase tracking-wider text-white">Full Profile</span>
+            <span className="text-[8px] font-mono text-slate-500 uppercase">Interactive Resume 2024</span>
+          </div>
+          <motion.div 
+            className="ml-2 text-brand opacity-0 group-hover:opacity-100 transition-opacity"
+            animate={{ x: [0, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          >
+            <ExternalLink size={12} />
+          </motion.div>
+        </a>
+      </motion.div>
 
       <motion.div
         animate={{ y: [0, 10, 0] }}
