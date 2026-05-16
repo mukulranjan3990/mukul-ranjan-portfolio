@@ -21,7 +21,7 @@ Create a `.env` file in the root directory and add the following variables:
 # Email configuration for the contact form
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
-RECEIVER_EMAIL=rockjacky86@gmail.com
+RECEIVER_EMAIL=
 ```
 
 ### 4. Run Development Server
