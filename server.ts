@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
@@ -7,11 +8,11 @@ import { rateLimit } from "express-rate-limit";
 
 dotenv.config();
 
-// Rate limiter for contact form: max 3 requests per IP per hour
+// email box new update - Rate limiter for contact form: max 2 requests per 15 minutes per IP
 const contactLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, 
-  message: { error: "Too many requests from this IP, please try again after an hour" },
+  windowMs: 15 * 60 * 1000, 
+  max: 2, 
+  message: { error: "Security Alert: Too many requests. Please try again in 15 minutes." },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -30,17 +31,26 @@ async function startServer() {
   });
 
   // API Routes
+  // email box new update - Added security route check
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
 
+  // email box new update - Applied stricter rate limiter, honeypot, and CAPTCHA validation
   app.post("/api/contact", contactLimiter, async (req, res) => {
-    const { name, email, subject, message, _honeypot } = req.body;
+    const { name, email, subject, message, _honeypot, captchaNum1, captchaNum2, captchaAnswer } = req.body;
 
-    // Honeypot check: If this hidden field is filled, it's likely a bot
+    // email box new update - Honeypot check: If this hidden field is filled, it's likely a bot
     if (_honeypot) {
-      console.warn("Honeypot triggered by request from:", req.ip);
-      return res.status(403).json({ error: "Spam detected" });
+      console.warn("Security Alert: Honeypot triggered by request from:", req.ip);
+      return res.status(403).json({ error: "Spam behavior detected. Access denied." });
+    }
+
+    // email box new update - CAPTCHA Verification
+    const expectedAnswer = parseInt(captchaNum1) + parseInt(captchaNum2);
+    if (parseInt(captchaAnswer) !== expectedAnswer) {
+      console.warn("Security Alert: Failed CAPTCHA from:", req.ip);
+      return res.status(400).json({ error: "Security Check Failed: Incorrect math answer." });
     }
 
     if (!name || !email || !message) {
@@ -89,7 +99,20 @@ async function startServer() {
         appType: "spa",
       });
       app.use(vite.middlewares);
-      console.log("Vite middleware loaded");
+      
+      // Explicitly serve index.html for SPA fallback in development
+      app.get("*", async (req, res, next) => {
+        const url = req.originalUrl;
+        try {
+          const templatePath = path.resolve(process.cwd(), "index.html");
+          let template = fs.readFileSync(templatePath, "utf-8");
+          template = await vite.transformIndexHtml(url, template);
+          res.status(200).set({ "Content-Type": "text/html" }).end(template);
+        } catch (e) {
+          next(e);
+        }
+      });
+      console.log("Vite middleware and fallback loaded");
     } catch (e) {
       console.error("Failed to load Vite middleware:", e);
     }

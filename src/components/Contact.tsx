@@ -8,11 +8,25 @@ const Contact = () => {
     email: "",
     subject: "",
     message: "",
-    _honeypot: "" // Honeypot field
+    _honeypot: "", // email box new update - Honeypot field to trap bots
+    captchaAnswer: "", // email box new update - Captcha answer field
+    captchaNum1: 0, // email box new update - Server-side verification helper
+    captchaNum2: 0  // email box new update - Server-side verification helper
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // email box new update - Generate random math captcha
+  const generateCaptcha = () => {
+    const n1 = Math.floor(Math.random() * 9) + 1;
+    const n2 = Math.floor(Math.random() * 9) + 1;
+    setFormData(prev => ({ ...prev, captchaNum1: n1, captchaNum2: n2, captchaAnswer: "" }));
+  };
+
+  React.useEffect(() => {
+    generateCaptcha();
+  }, []);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -34,6 +48,10 @@ const Contact = () => {
       newErrors.message = "Message must be at least 10 characters";
     }
 
+    if (!formData.captchaAnswer) {
+      newErrors.captchaAnswer = "Security check required";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -49,6 +67,7 @@ const Contact = () => {
     setErrorMessage("");
 
     try {
+      // email box new update - Sending secure payload
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,11 +78,13 @@ const Contact = () => {
 
       if (response.ok) {
         setStatus("success");
-        setFormData({ name: "", email: "", subject: "", message: "", _honeypot: "" });
+        setFormData({ name: "", email: "", subject: "", message: "", _honeypot: "", captchaAnswer: "", captchaNum1: 0, captchaNum2: 0 });
+        generateCaptcha();
         setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
         setErrorMessage(data.error || "Something went wrong. Please try again.");
+        generateCaptcha(); // email box new update - Reset captcha on failure
       }
     } catch (err) {
       setStatus("error");
@@ -168,7 +189,7 @@ const Contact = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Honeypot field - visually hidden */}
+                {/* email box new update - Honeypot field - visually hidden to protect against spam bots */}
                 <div style={{ display: 'none' }} aria-hidden="true">
                   <input 
                     type="text" 
@@ -231,6 +252,34 @@ const Contact = () => {
                     className={`w-full bg-slate-950/50 border-b ${errors.message ? 'border-red-500/50' : 'border-slate-800'} focus:border-brand px-0 py-3 text-sm focus:outline-none transition-colors text-white uppercase font-bold tracking-tight placeholder:text-slate-700 resize-none`}
                   />
                   {errors.message && <p className="text-[9px] font-mono text-red-500 uppercase font-bold">{errors.message}</p>}
+                </div>
+
+                {/* email box new update - Math CAPTCHA Security Section */}
+                <div className="bg-slate-950/30 border border-slate-800/50 p-6 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-brand">
+                      <MessageSquare size={14} />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Security Verification</p>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row md:items-end gap-6">
+                    <div className="flex-1 space-y-3">
+                      <label className="text-[9px] font-mono text-slate-500 uppercase">Solve: {formData.captchaNum1} + {formData.captchaNum2} = ?</label>
+                      <input 
+                        type="number" 
+                        name="captchaAnswer"
+                        value={formData.captchaAnswer}
+                        onChange={handleChange}
+                        placeholder="ENTER RESULT"
+                        className={`w-full bg-transparent border-b ${errors.captchaAnswer ? 'border-red-500/50' : 'border-slate-800'} focus:border-brand px-0 py-2 text-sm focus:outline-none transition-colors text-white uppercase font-bold tracking-widest placeholder:text-slate-800`}
+                      />
+                    </div>
+                    <div className="text-[8px] text-slate-700 font-mono italic max-w-[150px]">
+                      This protocol prevents automated scripts from flooding the infrastructure.
+                    </div>
+                  </div>
+                  {errors.captchaAnswer && <p className="text-[9px] font-mono text-red-500 uppercase font-bold">{errors.captchaAnswer}</p>}
                 </div>
 
                 {status === "error" && (
