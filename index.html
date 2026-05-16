@@ -7,7 +7,16 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>console.log("Index.html scripts starting...")</script>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      setTimeout(() => {
+        if (!document.getElementById('root')?.hasChildNodes()) {
+          console.error("Root element is still empty after 3 seconds!");
+          document.body.style.backgroundColor = "red"; // Visual indicator of failure
+        }
+      }, 3000);
+    </script>
   </body>
 </html>
 

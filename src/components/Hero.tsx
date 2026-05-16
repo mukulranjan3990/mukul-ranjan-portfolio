@@ -34,7 +34,7 @@ const Hero = () => {
     setText(updatedText);
 
     if (isDeleting) {
-      setDelta(prevDelta => prevDelta / 2);
+      setDelta(prevDelta => Math.max(prevDelta / 2, 30));
     }
 
     if (!isDeleting && updatedText === fullText) {
