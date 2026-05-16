@@ -40,11 +40,13 @@ const Navbar = () => {
           className="flex items-center gap-3 group"
         >
           <div className="w-8 h-8 rounded-full border border-slate-800 overflow-hidden bg-slate-900 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
-            <img
-               src={`${import.meta.env.BASE_URL}profile2.png`}
-               alt="Mukul Ranjan"
-               referrerPolicy="no-referrer"
-               className="w-full h-full object-cover grayscale brightness-110 hover:grayscale-0 transition-all duration-700 hover:scale-105"
+            <img 
+              src="/profile2.png" 
+              alt="MR" 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100";
+              }}
             />
           </div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 font-bold group-hover:text-white transition-colors">MUKUL / 2024</span>

@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
@@ -89,7 +90,20 @@ async function startServer() {
         appType: "spa",
       });
       app.use(vite.middlewares);
-      console.log("Vite middleware loaded");
+      
+      // Explicitly serve index.html for SPA fallback in development
+      app.get("*", async (req, res, next) => {
+        const url = req.originalUrl;
+        try {
+          const templatePath = path.resolve(process.cwd(), "index.html");
+          let template = fs.readFileSync(templatePath, "utf-8");
+          template = await vite.transformIndexHtml(url, template);
+          res.status(200).set({ "Content-Type": "text/html" }).end(template);
+        } catch (e) {
+          next(e);
+        }
+      });
+      console.log("Vite middleware and fallback loaded");
     } catch (e) {
       console.error("Failed to load Vite middleware:", e);
     }
