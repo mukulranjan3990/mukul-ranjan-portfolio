@@ -10,6 +10,7 @@ import About from "./components/About";
 import TechStack from "./components/TechStack";
 import Journey from "./components/Journey";
 import Projects from "./components/Projects";
+import ResumeSection from "./components/ResumeSection"; // resume - import section
 import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -39,6 +40,7 @@ export default function App() {
         <About />
         <TechStack />
         <Journey />
+        <ResumeSection /> {/* resume - interactive jump section */}
         <Projects />
         <Certifications />
         <Contact />
