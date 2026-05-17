@@ -65,7 +65,7 @@ const Navbar = () => {
             </motion.a>
           ))}
           <motion.button
-            onClick={() => window.open('/resume.pdf', '_blank')}
+            onClick={() => window.open('resume.pdf', '_blank')}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="px-4 py-2 bg-white text-black text-[10px] font-bold uppercase tracking-tighter hover:bg-brand transition-colors"
